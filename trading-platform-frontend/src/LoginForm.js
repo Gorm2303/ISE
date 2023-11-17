@@ -21,6 +21,8 @@ const LoginForm = ({ setIsLoggedIn }) => {
             // Handle the response here. Typically, you would save the JWT token received
             // and update the logged-in state of the user.
             console.log(response.data); // You might want to replace this with proper action
+            // Assuming the JWT is in the 'token' field of the response
+            localStorage.setItem('userToken', response.data.token);
             setIsLoggedIn(true); // Update the logged-in state
         } catch (error) {
             console.error("Login error:", error);

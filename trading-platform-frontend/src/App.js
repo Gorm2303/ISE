@@ -5,7 +5,7 @@ import StockList from './StockList';
 import TradeForm from './TradeForm';
 import AccountForm from './AccountForm';
 import LoginForm from './LoginForm';
-
+import Portfolio from './Portfolio';
 
 function App() {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -22,6 +22,7 @@ function App() {
             <StockList />
             {isLoggedIn ? (
                 <>
+                    <Portfolio />
                     <TradeForm />
                     <AccountForm />
                 </>

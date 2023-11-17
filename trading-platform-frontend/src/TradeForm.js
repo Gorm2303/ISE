@@ -4,32 +4,33 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import './TradeForm.css';
 
-
 const TradeForm = () => {
     const [tradeType, setTradeType] = useState('buy'); // 'buy' or 'sell'
     const [stockSymbol, setStockSymbol] = useState('');
-    const [quantity, setQuantity] = useState(0);
+    const [quantity, setQuantity] = useState('');
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-
-        const url = `http://localhost:5000/stocks/${tradeType}`; // Adjust URL based on your backend
-        const data = {
-            stockSymbol,
-            quantity: Number(quantity),
-        };
+        const token = localStorage.getItem('userToken'); // Retrieve the stored token
+        
+        // Determine the correct endpoint based on the trade type
+        const endpoint = tradeType === 'buy' ? '/stocks/buy' : '/stocks/sell';
+        const url = `http://localhost:5000${endpoint}`;
 
         try {
-            const response = await axios.post(url, data, {
+            const response = await axios.post(url, {
+                stockSymbol,
+                quantity: Number(quantity),
+            }, {
                 headers: {
-                    Authorization: 'Bearer yourTokenHere', // Replace with actual token
-                },
+                    Authorization: `Bearer ${token}` // Attach the token in the Authorization header
+                }
             });
-            alert(response.data.message); // Show success message
-            // Reset form or additional actions on success
+            // Handle the response here (e.g., show success message, update state)
+            alert(response.data.message);
         } catch (error) {
-            console.error("Trade error:", error);
-            // Handle error (e.g., show an error message)
+            console.error("Trade error:", error.response.data.message);
+            alert(error.response.data.message);
         }
     };
 

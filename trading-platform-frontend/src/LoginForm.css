@@ -1,0 +1,40 @@
+/* src/LoginForm.css */
+
+.login-form {
+    margin: 1em auto;
+    padding: 1em;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    width: 300px;
+}
+
+.login-form h2 {
+    margin-top: 0;
+    text-align: center;
+}
+
+.login-form label {
+    display: block;
+    margin-bottom: 1em;
+}
+
+.login-form input {
+    width: calc(100% - 10px);
+    padding: 8px;
+    margin-top: 4px;
+}
+
+.login-form button {
+    width: 100%;
+    padding: 8px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.login-form button:hover {
+    background-color: #0056b3;
+}

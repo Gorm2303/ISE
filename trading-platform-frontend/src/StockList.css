@@ -1,0 +1,24 @@
+/* src/StockList.css */
+
+.stock-list {
+    margin: 1em;
+    padding: 1em;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.stock-list h2 {
+    margin-top: 0;
+}
+
+.stock-list table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.stock-list th, .stock-list td {
+    padding: 8px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}

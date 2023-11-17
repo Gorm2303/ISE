@@ -1,0 +1,33 @@
+/* src/Header.css */
+
+.header {
+    background-color: #f8f8f8;
+    padding: 1em 2em;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.header h1 {
+    margin: 0;
+    font-size: 1.5em;
+}
+
+.header nav {
+    /* Additional styling for navigation */
+}
+
+.header button {
+    padding: 0.5em 1em;
+    margin-left: 1em;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.header button:hover {
+    background-color: #0056b3;
+}

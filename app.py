@@ -1,10 +1,13 @@
+import requests
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 from flask_pymongo import PyMongo
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
 from werkzeug.security import generate_password_hash, check_password_hash
 from bson.objectid import ObjectId
 
 app = Flask(__name__)
+CORS(app)
 
 # MongoDB configuration
 app.config["MONGO_URI"] = "mongodb://localhost:27017/TradingPlatformDB"
@@ -18,6 +21,28 @@ jwt = JWTManager(app)
 @app.route('/')
 def index():
     return "Trading Platform Backend is Running!"
+
+@app.route('/latest-stocks')
+def get_latest_stocks_prices():
+    stock_symbols = ['AAPL', 'GOOGL', 'MSFT', 'AMZN', 'FB', 'TSLA', 'JPM', 'V', 'WMT', 'DIS']  # Add more symbols as needed
+    latest_prices = {}
+    api_key = 'dd5agEuxMxzBU8yLY97M'  # Replace with your actual API key
+
+    for symbol in stock_symbols:
+        try:
+            url = f'https://www.quandl.com/api/v3/datasets/WIKI/{symbol}.json?api_key={api_key}&rows=1'  # Fetch only the latest row
+            response = requests.get(url)
+            response.raise_for_status()
+            latest_data = response.json()['dataset']['data'][0]
+            latest_prices[symbol] = {
+                'date': latest_data[0],
+                'close': latest_data[4]
+            }
+        except requests.RequestException as e:
+            print(f"Error fetching data for {symbol}: {e}")
+
+    return jsonify(latest_prices)
+
 
 @app.route('/auth/login', methods=['POST'])
 def login():

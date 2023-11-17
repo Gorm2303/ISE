@@ -11,6 +11,8 @@ const LoginForm = ({ setIsLoggedIn }) => {
     const handleSubmit = async (event) => {
         event.preventDefault();
 
+        console.log('Form submitted'); // Check if this logs when you click the login button
+
         const url = 'http://localhost:5000/auth/login'; // Adjust URL based on your backend
         const data = { username, password };
 

@@ -5,12 +5,16 @@ import StockList from './StockList';
 import TradeForm from './TradeForm';
 import AccountForm from './AccountForm';
 import LoginForm from './LoginForm';
+import RegisterForm from './RegisterForm';
 import Portfolio from './Portfolio';
+import Modal from './Modal';
 import axios from 'axios';
 
 
 function App() {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [showLoginModal, setShowLoginModal] = useState(false);
+    const [showRegisterModal, setShowRegisterModal] = useState(false);
     const [portfolio, setPortfolio] = useState([]); // Add this line
     const [balance, setBalance] = useState(0);
 
@@ -61,17 +65,27 @@ function App() {
 
     return (
         <div>
-            <Header isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
+            <Header 
+                isLoggedIn={isLoggedIn} 
+                setIsLoggedIn={setIsLoggedIn} 
+                onShowLogin={() => setShowLoginModal(true)} 
+                onShowRegister={() => setShowRegisterModal(true)}
+            />
+            <Modal isOpen={showLoginModal} onClose={() => setShowLoginModal(false)}>
+                <LoginForm setIsLoggedIn={setIsLoggedIn} setShowLoginModal={setShowLoginModal} />
+            </Modal>
+
+            <Modal isOpen={showRegisterModal} onClose={() => setShowRegisterModal(false)}>
+                <RegisterForm setIsLoggedIn={setIsLoggedIn} setShowRegisterModal={setShowRegisterModal} />
+            </Modal>
             <StockList />
-            {isLoggedIn ? (
+            {isLoggedIn &&
                 <>
                     <Portfolio balance={balance} portfolio={portfolio} />
                     <TradeForm setPortfolio={setPortfolio} setBalance={setBalance} />
                     <AccountForm balance={balance} setBalance={setBalance} />
                 </>
-            ) : (
-                <LoginForm setIsLoggedIn={setIsLoggedIn} />
-            )}
+            }
         </div>
     );    
 }

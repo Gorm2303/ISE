@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import './LoginForm.css';
 
-const LoginForm = ({ setIsLoggedIn }) => {
+const LoginForm = ({ setIsLoggedIn, setShowLoginModal }) => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
@@ -24,6 +24,7 @@ const LoginForm = ({ setIsLoggedIn }) => {
             // Assuming the JWT is in the 'token' field of the response
             localStorage.setItem('userToken', response.data.token);
             setIsLoggedIn(true); // Update the logged-in state
+            setShowLoginModal(false)
         } catch (error) {
             console.error("Login error:", error);
             // Handle error (e.g., show an error message)

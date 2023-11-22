@@ -105,7 +105,7 @@ def register():
     user_data = {
         'username': username,
         'password': hashed_password,
-        'balance': 1000,
+        'balance': 0,
         'portfolio': []
     }
     

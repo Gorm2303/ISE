@@ -3,11 +3,14 @@
 import React from 'react';
 import './Header.css';
 
-const Header = ({ isLoggedIn, setIsLoggedIn }) => {
+const Header = ({ isLoggedIn, setIsLoggedIn, onShowLogin, onShowRegister }) => {
     const handleLogout = () => {
-        // Logic to handle logout
-        // This should also involve clearing any stored authentication tokens or user data
+        // Set the logged in state to false
         setIsLoggedIn(false);
+    
+        // Clear any stored user data or tokens. 
+        // This depends on where and how you're storing these data.
+        localStorage.removeItem('userToken'); // Assuming the token is stored in localStorage with the key 'userToken'
     };
 
     return (
@@ -15,15 +18,13 @@ const Header = ({ isLoggedIn, setIsLoggedIn }) => {
             <h1>Trading Platform</h1>
             <nav>
                 {isLoggedIn ? (
-                    <>
                         <button onClick={handleLogout}>Logout</button>
-                        {/* Add more buttons or links for deposit/withdraw here */}
-                    </>
                 ) : (
                     // Show a login button or link if not logged in
-                    <button onClick={() => {/* Logic to show login form */}}>
-                        Login
-                    </button>
+                    <>
+                        <button onClick={onShowLogin}>Login</button>
+                        <button onClick={onShowRegister}>Register</button>
+                    </>
                 )}
             </nav>
         </header>

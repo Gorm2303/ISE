@@ -7,7 +7,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from bson.objectid import ObjectId
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}})
 
 # MongoDB configuration
 app.config["MONGO_URI"] = "mongodb://localhost:27017/TradingPlatformDB"
@@ -17,6 +17,7 @@ app.config['JWT_SECRET_KEY'] = 'your-secret-key'  # change this to a random secr
 
 mongo = PyMongo(app)
 jwt = JWTManager(app)
+api_key = 'dd5agEuxMxzBU8yLY97M'  # Replace with your actual API key
 
 @app.route('/')
 def index():
@@ -26,7 +27,6 @@ def index():
 def get_latest_stocks_prices():
     stock_symbols = ['AAPL', 'GOOGL', 'MSFT', 'AMZN', 'FB', 'TSLA', 'JPM', 'V', 'WMT', 'DIS']  # Add more symbols as needed
     latest_prices = {}
-    api_key = 'dd5agEuxMxzBU8yLY97M'  # Replace with your actual API key
 
     for symbol in stock_symbols:
         try:
@@ -43,15 +43,37 @@ def get_latest_stocks_prices():
 
     return jsonify(latest_prices)
 
+@app.route('/user/balance', methods=['GET'])
+@jwt_required()
+def get_balance():
+    current_user_id = get_jwt_identity()
+
+    # Fetching the user from the database
+    user = mongo.db.users.find_one({'_id': ObjectId(current_user_id)})
+
+    if not user:
+        return jsonify({'message': 'User not found'}), 404
+
+    # Extracting the balance from the user's data
+    balance = user.get('balance', 0)  # Default to 0 if no balance field
+
+    return jsonify({'balance': balance})
+
 @app.route('/user/portfolio')
 @jwt_required()
-def get_user_portfolio():
+def get_portfolio():
     current_user_id = get_jwt_identity()
     user = mongo.db.users.find_one({'_id': ObjectId(current_user_id)})
+    
+    print("Fetching portfolio for user:", current_user_id)  # Debug print
+
     if not user:
         return jsonify(message="User not found"), 404
 
+    print("Portfolio data:", user.get('portfolio', []))  # Debug print
+
     return jsonify(portfolio=user.get('portfolio', [])), 200
+
 
 @app.route('/auth/login', methods=['POST'])
 def login():
@@ -93,18 +115,23 @@ def register():
 @app.route('/account/deposit', methods=['POST'])
 @jwt_required()
 def deposit_money():
+    data = request.json
+    print("Received data:", data)
+    # Your validation and processing logic...
     current_user_id = get_jwt_identity()
     amount = request.json.get('amount', 0)
+    print("Request amount:", amount)
 
     user = mongo.db.users.find_one({'_id': ObjectId(current_user_id)})
+
+    print("User: ", user)
 
     if user:
         if 'balance' not in user:
             user['balance'] = 0.0
 
         new_balance = user['balance'] + amount
-        mongo.db.users.update_one({'_id': current_user_id}, {'$set': {'balance': new_balance}})
-
+        mongo.db.users.update_one({'_id': ObjectId(current_user_id)}, {'$set': {'balance': new_balance}})
         return jsonify(newBalance=new_balance, message="Deposited successfully"), 200
     else:
         return jsonify(message="User not found"), 404
@@ -129,6 +156,23 @@ def withdraw_money():
     else:
         return jsonify(message="User not found"), 404
     
+def get_stock_price(stock_symbol):
+    # This is a placeholder. Replace the URL with the actual endpoint of the stock price API.
+    url = f'https://www.quandl.com/api/v3/datasets/WIKI/{stock_symbol}/data.json?api_key={api_key}'
+
+    try:
+        # Make a request to the API
+        response = requests.get(url, params={"api_key": api_key})
+        response.raise_for_status()  # This will raise an error for a bad request (4xx or 5xx response)
+
+        # Parse the response JSON and return the stock price
+        data = response.json()
+        return data['dataset_data']['data'][0][4]  # Adjust according to the response structure
+    except requests.RequestException as e:
+        # Handle any errors that occur during the request
+        print(f"Error fetching stock price for {stock_symbol}: {e}")
+        return None
+
 @app.route('/stocks/buy', methods=['POST'])
 @jwt_required()
 def buy_stocks():

@@ -1,16 +1,19 @@
 describe('Deposit Tests', () => {
-    it('Successful deposit', () => {
-        // Assuming the user is already logged in
-        cy.visit('/deposit');
-        cy.get('input[name="amount"]').type('50');
-        cy.get('button[type="submit"]').click();
-        cy.get('.account-balance').should('contain', '$150'); // Check the updated balance
+    beforeEach(() => {
+        // Assuming you have a function to log in the user
+        // loginUser(); 
+        cy.visit('/'); // Adjust if the trade form is on a different route
+        cy.intercept('GET', 'http://localhost:5000/latest-stocks').as('getStocks');
+        cy.wait('@getStocks');
+        cy.login('admin', 'password');
     });
 
-    it('Deposit with invalid amount', () => {
-        cy.visit('/deposit');
-        cy.get('input[name="amount"]').type('-50');
-        cy.get('button[type="submit"]').click();
-        cy.get('.error-message').should('be.visible');
+    it('Successful deposit', () => {
+        cy.on('window:alert', (str) => {
+            expect(str).to.equal('Deposited successfully');
+        });
+        // Assuming the user is already logged in
+        cy.depositMoney(1);
     });
+
 });

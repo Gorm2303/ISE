@@ -83,9 +83,9 @@ const TradeForm = ({ setPortfolio, setBalance }) => {
 
             <label>
                 Trade Type:
-                <select value={tradeType} onChange={e => setTradeType(e.target.value)}>
-                    <option value="buy">Buy</option>
-                    <option value="sell">Sell</option>
+                <select name="tradeType" value={tradeType} onChange={e => setTradeType(e.target.value)}>
+                    <option name="buy" value="buy">Buy</option>
+                    <option name="sell" value="sell">Sell</option>
                 </select>
             </label>
 
@@ -93,6 +93,7 @@ const TradeForm = ({ setPortfolio, setBalance }) => {
                 Stock Symbol:
                 <input
                     type="text"
+                    name="stockSymbol"
                     value={stockSymbol}
                     onChange={e => setStockSymbol(e.target.value)}
                     required
@@ -103,6 +104,7 @@ const TradeForm = ({ setPortfolio, setBalance }) => {
                 Quantity:
                 <input
                     type="number"
+                    name="quantity"
                     value={quantity}
                     onChange={e => setQuantity(e.target.value)}
                     required

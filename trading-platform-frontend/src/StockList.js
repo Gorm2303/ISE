@@ -32,7 +32,7 @@ const StockList = () => {
                 <tbody>
                     {Object.entries(stocks).map(([symbol, data]) => (
                         <tr key={symbol}>
-                            <td>{symbol}</td>
+                            <td name="stockSymbol">{symbol}</td>
                             <td>{data.date}</td>
                             <td>${data.close.toFixed(2)}</td>
                         </tr>

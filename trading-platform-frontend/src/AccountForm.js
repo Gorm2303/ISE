@@ -46,9 +46,9 @@ const AccountForm = ({ balance, setBalance}) => {
 
             <label>
                 Action:
-                <select value={actionType} onChange={e => setActionType(e.target.value)}>
-                    <option value="deposit">Deposit</option>
-                    <option value="withdraw">Withdraw</option>
+                <select name="transactionType" value={actionType} onChange={e => setActionType(e.target.value)}>
+                    <option name="deposit" value="deposit">Deposit</option>
+                    <option name="withdraw" value="withdraw">Withdraw</option>
                 </select>
             </label>
 
@@ -56,13 +56,14 @@ const AccountForm = ({ balance, setBalance}) => {
                 Amount:
                 <input
                     type="number"
+                    name="amount"
                     value={amount}
                     onChange={e => setAmount(e.target.value)}
                     required
                 />
             </label>
 
-            <button type="submit">Execute {actionType}</button>
+            <button name="actionTypeButton" type="submit">Execute {actionType}</button>
         </form>
     );
 };
